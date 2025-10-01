@@ -1,20 +1,88 @@
 #include "main.h"
+#include <numbers>
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
+// All Distances in Inches
+
+#define LEFT_TRACKING_WHEEL_PORT 1
+#define RIGHT_TRACKING_WHEEL_PORT 2
+#define BACK_TRACKING_WHEEL_PORT 3
+
+#define LEFT_TRACKING_WHEEL_DISTANCE 5.5
+#define RIGHT_TRACKING_WHEEL_DISTANCE 5.5
+#define BACK_TRACKING_WHEEL_DISTANCE 3
+
+#define TRACKING_WHEEL_RADIUS 2
+
+pros::Rotation LTWheel(LEFT_TRACKING_WHEEL_PORT);
+pros::Rotation RTWheel(RIGHT_TRACKING_WHEEL_PORT);
+pros::Rotation BTWheel(BACK_TRACKING_WHEEL_PORT);
+
+double pos_x = 0, pos_y = 0, theta = 0;
+
+typedef struct ArcLengths {
+	double left;
+	double right;
+	double back;
+} ArcLengths;
+
+// Get arc lengths and updates encoder values
+ArcLengths get_wheel_travel() {
+
+	int currLeft = LTWheel.get_position();
+	int currRight = RTWheel.get_position();
+	int currBack = BTWheel.get_position();
+
+	double del_L = (currLeft / 100.0) * (std::numbers::pi / 180.0); 
+	double del_R = (currRight / 100.0) * (std::numbers::pi / 180.0); 
+	double del_B = (currBack / 100.0) * (std::numbers::pi / 180.0); 
+
+
+	ArcLengths del;
+	del.left = del_L;
+	del.right = del_R;
+	del.back = del_B;
+
+	LTWheel.reset_position();
+	RTWheel.reset_position();
+	BTWheel.reset_position();
+
+	return del;
 }
+
+// Returns the change in heading value using parallel tracker wheels
+double compute_heading_change(ArcLengths arcs) {
+	return (arcs.right - arcs.left) / (RIGHT_TRACKING_WHEEL_DISTANCE - LEFT_TRACKING_WHEEL_DISTANCE);
+}
+
+// Calculate and update global variables holding position and orientation
+void update_position_and_angle() {
+	// Calculate distance travelled by each tracking wheel
+	ArcLengths arcs = get_wheel_travel();
+	
+	// Determine change in heading 
+	double del_theta = compute_heading_change(arcs);
+
+	// Determine change in local x and in local y
+	double dx_local = (arcs.left + arcs.right) / 2.0;
+	double dy_local = arcs.back - (del_theta * -BACK_TRACKING_WHEEL_DISTANCE);
+
+	// Compute using midpoint formula
+	double heading_mid = theta + (del_theta / 2);
+
+	// Calculate change in x and y
+	double del_x = std::cos(heading_mid) * dx_local - std::sin(heading_mid) * dy_local;
+	double del_y = std::sin(heading_mid) * dx_local - std::sin(heading_mid) * dy_local;
+
+	// Increment position and angle by calculated changes
+	pos_x += del_x;
+	pos_y += del_y;
+	theta += del_theta;
+
+	// Keep theta between 0 and 360
+	if (theta < 0) theta += 360;
+	if (theta > 360) theta -= 360;
+}
+
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -24,9 +92,6 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
-
-	pros::lcd::register_btn1_cb(on_center_button);
 }
 
 /**
@@ -74,21 +139,7 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::MotorGroup left_mg({1, -2, 3});    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
-	pros::MotorGroup right_mg({-4, 5, -6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 
 
-	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
 
-		// Arcade control scheme
-		int dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
-		int turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
-		left_mg.move(dir - turn);                      // Sets left motor voltage
-		right_mg.move(dir + turn);                     // Sets right motor voltage
-		pros::delay(20);                               // Run for 20 ms then update
-	}
 }
