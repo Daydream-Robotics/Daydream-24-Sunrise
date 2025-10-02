@@ -75,9 +75,9 @@ void autonomous() {}
  */
 
 // Instantiate Motor Groups and Controller
- pros::MotorGroup leftMotors({1, 2, 3, 4});
- pros::MotorGroup rightMotors({5, 6, 7, 8});
- pros::Controller controller;
+ pros::MotorGroup leftMotors({-10, -9, -8, -18});
+ pros::MotorGroup rightMotors({16, 2, 14, 13});
+ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 void opcontrol() {
 	// Set Motor Brakes to Coast
