@@ -11,13 +11,16 @@
 #define RIGHT_TRACKING_WHEEL_DISTANCE 5.5
 #define BACK_TRACKING_WHEEL_DISTANCE 3
 
-#define TRACKING_WHEEL_RADIUS 2
+#define TRACKING_WHEEL_DIAMETER 2.6
 
 pros::Rotation LTWheel(LEFT_TRACKING_WHEEL_PORT);
 pros::Rotation RTWheel(RIGHT_TRACKING_WHEEL_PORT);
 pros::Rotation BTWheel(BACK_TRACKING_WHEEL_PORT);
 
 double pos_x = 0, pos_y = 0, theta = 0;
+
+// Testing Vars
+double distTraveled = 0;
 
 typedef struct ArcLengths {
 	double left;
@@ -32,15 +35,18 @@ ArcLengths get_wheel_travel() {
 	int currRight = RTWheel.get_position();
 	int currBack = BTWheel.get_position();
 
-	double del_L = (currLeft / 100.0) * (std::numbers::pi / 180.0); 
-	double del_R = (currRight / 100.0) * (std::numbers::pi / 180.0); 
-	double del_B = (currBack / 100.0) * (std::numbers::pi / 180.0); 
-
+	// Convert centidegrees to degrees and find distance travelled by wheel
+	double del_L = (currLeft / 36000.0) * TRACKING_WHEEL_DIAMETER * std::numbers::pi; 
+	double del_R = (currRight / 36000.0) * TRACKING_WHEEL_DIAMETER * std::numbers::pi; 
+	double del_B = (currBack / 36000.0) * TRACKING_WHEEL_DIAMETER * std::numbers::pi;
 
 	ArcLengths del;
 	del.left = del_L;
 	del.right = del_R;
 	del.back = del_B;
+
+	// Tracking for testing
+	distTraveled += del_L;
 
 	LTWheel.reset_position();
 	RTWheel.reset_position();
@@ -140,6 +146,10 @@ void autonomous() {}
  */
 void opcontrol() {
 
-
+	while (true) {
+		get_wheel_travel();
+		pros::lcd::print(0, "Distance Traveled: %f", distTraveled);
+		pros::delay(20);
+	}
 
 }
