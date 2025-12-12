@@ -30,7 +30,7 @@ void autonomous() {
 	rightMotors.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
 
 	// Move away from parking zone
-	move_dist_pid(12.0, 50, -1, true);
+	move_dist_pid(10.0, 50, -1, true);
 
 	
 	// Turn to farside
@@ -41,40 +41,59 @@ void autonomous() {
 	mainIntake.move(LOW_VOLTAGE);
 	backIntake.move(LOW_VOLTAGE);
 
-	// Travel to farside
-	move_dist_pid(91.0, 50, -1, false);
+	for (int i = 0; i < 3; i++) {
+		turn_pid(90, 0);
+		move_dist_pid(30.0, 50, -1, false);
+	}
 
 	
 	// Turn to balls and apprach
 	turn_pid(180, 0);
-	move_dist_pid(30, 50, -1, false);
+	move_dist_pid(27, 50, -1, false);
 	
 	// Intake side balls
 	frontIntake.move(HIGH_VOLTAGE);
 	mainIntake.move(HIGH_VOLTAGE);
 	backIntake.move(STOP);
-	move_dist_pid(10, 15, 2000, false);
+	move_dist_pid(11, 18, 1750, false);
 
 	// Reverse back to matchloader
-	move_dist_pid(12, 50, -1, true);
+	frontIntake.move(STOP);
+	mainIntake.move(STOP);
+	turn_pid(180, 0);
+	move_dist_pid(12.00, 50, -1, true);
 
 	// Turn to matchloader
 	turn_pid(90, 0);
 	piston.set_value(true);
 	pros::delay(1000);
 
+	frontIntake.move(HIGH_VOLTAGE);
+	mainIntake.move(HIGH_VOLTAGE);
+
 	// Attack matchloader
-	move_dist_pid(9, 15, 2000, false);
-	pros::delay(4000);
+	move_dist_pid(11.0, 30, 1500, false);
+	pros::delay(2500);
 
 	// Back up
-	move_dist_pid(20, 35, -1, true);
+	move_dist_pid(5, 35, -1, true);
+	turn_pid(90, 0);
+	move_dist_pid(5, 35, -1, true);
 	piston.set_value(false);
+	mainIntake.move(STOP);
+	frontIntake.move(STOP);
 
 	// Approach Long Goal and Unleash
-	move_dist_pid(5, 15, 1000, true);
-	backIntake.move(LOW_VOLTAGE);
-	pros::delay(4000);
+	move_dist_pid(13, 25, 1000, true);
+
+	mainIntake.move(-MID_VOLTAGE);
+	backIntake.move(-MID_VOLTAGE);
+	pros::delay(300);
+
+	backIntake.move(MID_VOLTAGE);
+	mainIntake.move(MID_VOLTAGE);
+	frontIntake.move(MID_VOLTAGE);
+	pros::delay(3000);
 
 	backIntake.move(STOP);
 	mainIntake.move(STOP);
@@ -95,7 +114,7 @@ void autonomous() {
 	move_dist_pid(9, 15, 1450, false);
 	pros::delay(4000);
 
-		// Back up
+	// Back up
 	move_dist_pid(20, 35, -1, true);
 	piston.set_value(false);
 
@@ -127,6 +146,7 @@ void opcontrol() {
 		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
 			autonomous();
 		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+			alignDistance(200);
 		}
 
 		update_position_and_angle();
