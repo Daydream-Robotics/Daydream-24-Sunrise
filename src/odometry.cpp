@@ -341,3 +341,92 @@ double convertRadToDeg (double rad) {
 double getDistance (Position p1, Position p2) {
 	return std::sqrt(std::pow((p2.x - p1.x), 2) + std::pow((p2.y - p1.y), 2));
 }
+
+void travelDistanceWithHeading(double distance, double speed, double target_heading, int timer) {
+
+	// PID controls
+	double integrator = 0.0;
+	double prev_error = 0.0;
+
+	// Initialize speed variables
+	const double max_speed = std::fabs(speed) * 1.5 + 1.0;
+	const double min_speed = -max_speed;
+
+	// Deceleration parameters
+	const double decel_distance = std::max(0.2, std::fabs(distance) * 0.15);
+	const double stop_threshold = 1; // 1 inch
+
+	// Clocking
+	using clock = std::chrono::steady_clock;
+	auto last_t = clock::now();
+
+	// Initialize timer if it exists
+	const auto start_time = last_t;
+	const auto timer_duration = std::chrono::milliseconds(timer);
+
+	// Initial position
+	Position start(pos_x, pos_y);
+	Position current = start;
+
+	double remaining = std::fabs(distance);
+	double direction = (distance >= 0) ? 1.0 : -1.0;
+
+	while (true) {
+		auto now = clock::now();
+		
+		// Check if timer has completed
+		if (timer > 0 && (now - start_time) > timer_duration) {
+			leftMotors.move_velocity(0);
+			rightMotors.move_velocity(0);
+			pros::delay(250);
+			return;
+		}
+		
+		// Calculate infintesimal time
+		std::chrono::duration<double> elapsed = now - last_t;
+		double dt = elapsed.count();
+		// Clamping for small numbers
+		if (dt <= 0) dt = 1e-3;
+		last_t = now;
+
+		update_position_and_angle();
+		double traveled = getDistance(start, { pos_x, pos_y });
+		remaining = std::fabs(distance) - traveled;
+		// Reached destination
+		if (remaining <= stop_threshold) break;
+
+		double heading = get_yaw_quaternion() - 180;
+		double heading_error = target_heading - heading;
+
+		// PID control
+		integrator += heading_error * dt;
+		integrator = std::clamp(integrator, -MOVE_HEADING_INTEGRATOR_LIMIT, MOVE_HEADING_INTEGRATOR_LIMIT);
+		double deriv = (heading_error - prev_error) / dt;
+		prev_error = heading_error;
+		double corr = MOVE_HEADING_KP * heading_error + MOVE_HEADING_KD * deriv + MOVE_HEADING_KI * integrator;
+
+		// Scale down speed as we near target
+		double speed_scale = 1.0;
+		if (remaining < decel_distance) {
+			speed_scale = std::clamp(remaining / decel_distance, 0.2, 1.0);
+		}
+
+		double forward = speed * direction * speed_scale;
+
+		// Determine wheel speeds
+		double left_vel = forward + corr;
+		double right_vel = forward - corr;
+		left_vel = std::clamp(left_vel, min_speed, max_speed);
+		right_vel = std::clamp(right_vel, min_speed, max_speed);
+
+		leftMotors.move_velocity(left_vel);
+		rightMotors.move_velocity(right_vel);
+
+		pros::delay(10);
+	}
+
+	leftMotors.move_velocity(0);
+	rightMotors.move_velocity(0);
+	pros::delay(250);
+	return;
+}
