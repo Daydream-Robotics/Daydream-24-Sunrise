@@ -342,6 +342,13 @@ double getDistance (Position p1, Position p2) {
 	return std::sqrt(std::pow((p2.x - p1.x), 2) + std::pow((p2.y - p1.y), 2));
 }
 
+double angleDiffDeg(double a, double b) {
+	double c = a - b;
+	while (c > 180.0) c -= 360.0;
+	while (c <= -180.0) c += 360.0;
+	return c;
+}
+
 void travelDistanceWithHeading(double distance, double speed, double target_heading, int timer) {
 
 	// PID controls
@@ -396,12 +403,12 @@ void travelDistanceWithHeading(double distance, double speed, double target_head
 		if (remaining <= stop_threshold) break;
 
 		double heading = get_yaw_quaternion() - 180;
-		double heading_error = target_heading - heading;
+		double heading_error = angleDiffDeg(target_heading, heading);
 
 		// PID control
 		integrator += heading_error * dt;
 		integrator = std::clamp(integrator, -MOVE_HEADING_INTEGRATOR_LIMIT, MOVE_HEADING_INTEGRATOR_LIMIT);
-		double deriv = (heading_error - prev_error) / dt;
+		double deriv = angleDiffDeg(heading_error, prev_error) / dt;
 		prev_error = heading_error;
 		double corr = MOVE_HEADING_KP * heading_error + MOVE_HEADING_KD * deriv + MOVE_HEADING_KI * integrator;
 

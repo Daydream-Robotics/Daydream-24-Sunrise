@@ -79,4 +79,7 @@ double get_yaw_quaternion();
 // Move a specified distance and direction
 void travelDistanceWithHeading(double distance, double speed, double target_heading, int timer);
 
+// Helper: shortest difference a - b normalized
+double angleDiffDeg(double a, double b);
+
 #endif
