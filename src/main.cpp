@@ -29,56 +29,107 @@ void autonomous() {
 	leftMotors.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
 	rightMotors.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
 
-	// Move away from parking zone
-	travelDistanceWithHeading(-15.0, 50, 0, -1);
+	// // Move away from parking zone
+	// travelDistanceWithHeading(-15.0, 50, 0, -1);
 
-	// Turn to farside
-	turn_pid(90, 0);
+	// // Turn to farside
+	// turn_pid(90, 0);
 
-	// Outtake any balls encountered
-	frontIntake.move(HIGH_VOLTAGE);
-	mainIntake.move(HIGH_VOLTAGE);
-	backIntake.move(HIGH_VOLTAGE);
+	// // Outtake any balls encountered
+	// frontIntake.move(HIGH_VOLTAGE);
+	// mainIntake.move(HIGH_VOLTAGE);
+	// backIntake.move(HIGH_VOLTAGE);
 
-	// Travel across field
-	travelDistanceWithHeading(90, 50, 90, -1);
+	// // Travel across field
+	// travelDistanceWithHeading(90, 50, 90, -1);
 
-	// Go to matchloader
-	turn_pid(180, 0);
-	travelDistanceWithHeading(18.25, 50, 180, -1);
-	backIntake.move(STOP);
+	// // Go to matchloader
+	// turn_pid(180, 0);
+	// travelDistanceWithHeading(18.25, 50, 180, -1);
+	// backIntake.move(STOP);
 
-	// Get balls from match loader
-	// Turn to matchloader
-	turn_pid(90, 0);
+	// // Get balls from match loader
+	// // Turn to matchloader
+	// turn_pid(90, 0);
+	// piston.set_value(true);
+	// pros::delay(1000);
+
+	// frontIntake.move(HIGH_VOLTAGE);
+	// mainIntake.move(HIGH_VOLTAGE);
+
+	// // Attack matchloader
+	// travelDistanceWithHeading(8.7, 33, 90, 1500);
+	// pros::delay(3000);
+
+	// // Back away from matchloader
+	// travelDistanceWithHeading(-7.5, 50, 90, -1);
+	// piston.set_value(false);
+
+	// // Turn to balls
+	// turn_pid(180, 0);
+	// travelDistanceWithHeading(8.0, 50, 180, -1);
+	// // Intake side balls
+	// travelDistanceWithHeading(5.0, 18, 180, 1200);
+
+	// // Reverse back to align with long goal
+	// frontIntake.move(STOP);
+	// mainIntake.move(STOP);
+	// travelDistanceWithHeading(-12, 50, 180, -1);
+
+	// // Turn to long goal
+	// turn_pid(90, 0);
+	// travelDistanceWithHeading(-20.15, 35, 90, 2700);
+	// mainIntake.move(-MID_VOLTAGE);
+	// backIntake.move(-MID_VOLTAGE);
+	// pros::delay(300);
+
+	// backIntake.move(MID_VOLTAGE);
+	// mainIntake.move(MID_VOLTAGE);
+	// frontIntake.move(MID_VOLTAGE);
+	// pros::delay(3000);
+
+	// backIntake.move(STOP);
+	// mainIntake.move(STOP);
+	// frontIntake.move(STOP);
+
+	// Back away from long goal // 90
+	travelDistanceWithHeading(15.15, 35, 0, 2700);
+	
+	// Travel to next area
+	turn_pid(-90, 0); // 0
+	travelDistanceWithHeading(92.75, 70, -90, -1);
+
+	// Face matchloader
+	turn_pid(0, 0); // 90
 	piston.set_value(true);
 	pros::delay(1000);
 
 	frontIntake.move(HIGH_VOLTAGE);
 	mainIntake.move(HIGH_VOLTAGE);
 
-	// Attack matchloader
-	travelDistanceWithHeading(8.7, 33, 90, 1500);
+	// Attack matchloader //90
+	travelDistanceWithHeading(12.7, 33, 0, 1500);
 	pros::delay(3000);
 
-	// Back away from matchloader
-	travelDistanceWithHeading(-7.5, 50, 90, -1);
+	// Back away from matchLoader // 90
+	travelDistanceWithHeading(-8, 35, 0, -1);
 	piston.set_value(false);
-
-	// Turn to balls
-	turn_pid(180, 0);
-	travelDistanceWithHeading(8.0, 50, 180, -1);
+	
+	// Turn to side balls
+	// 0
+	turn_pid(-90, 0);
+	travelDistanceWithHeading(8.0, 50, -90, -1);
 	// Intake side balls
-	travelDistanceWithHeading(5.0, 18, 180, 1200);
+	travelDistanceWithHeading(5.0, 18, -90, 1200);
 
 	// Reverse back to align with long goal
 	frontIntake.move(STOP);
-	mainIntake.move(STOP);
-	travelDistanceWithHeading(-12, 50, 180, -1);
+	mainIntake.move(STOP); // 0
+	travelDistanceWithHeading(-12, 50, -90, -1);
 
 	// Turn to long goal
-	turn_pid(90, 0);
-	travelDistanceWithHeading(-20.15, 35, 90, 2700);
+	turn_pid(0, 0); // 90
+	travelDistanceWithHeading(-20.15, 35, 0, 2700);
 	mainIntake.move(-MID_VOLTAGE);
 	backIntake.move(-MID_VOLTAGE);
 	pros::delay(300);
@@ -91,34 +142,6 @@ void autonomous() {
 	backIntake.move(STOP);
 	mainIntake.move(STOP);
 	frontIntake.move(STOP);
-
-	// // Back away from long goal
-	// move_dist_pid(12, 50, -1, false);
-	// turn_pid(0, 0);
-
-	// // Travel to second matchloader and face it
-	// move_dist_pid(86, 50, -1, false);
-	// turn_pid(90, 0);
-
-	// piston.set_value(true);
-	// pros::delay(1000);
-
-	// // Attack matchloader
-	// move_dist_pid(9, 15, 1450, false);
-	// pros::delay(4000);
-
-	// // Back up
-	// move_dist_pid(20, 35, -1, true);
-	// piston.set_value(false);
-
-	// // Approach Long Goal and Unleash
-	// move_dist_pid(5, 15, 1000, true);
-	// backIntake.move(LOW_VOLTAGE);
-	// pros::delay(4000);
-
-	// backIntake.move(STOP);
-	// mainIntake.move(STOP);
-	// frontIntake.move(STOP);
 
 }
 
