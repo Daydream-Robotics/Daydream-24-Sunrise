@@ -150,22 +150,7 @@ void opcontrol() {
 
 	while(true){
 
-		// Start autonomous
-		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-			autonomous();
-		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-			// travelDistanceWithHeading(30, 35, 0, -1);
-			// turn_pid(-90, 0);
-			// travelDistanceWithHeading(80, 50, -90, -1);
-			travelDistanceWithHeading(-30, 50, 45, -1);
-		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-			travelDistanceWithHeading(30, 50, 45, -1);
-		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-			turn_pid(45, 0);
-		}
-
 		update_position_and_angle();
-		controller.print(0, 0, "X: %.1lf Y: %.1lf O: %.1lf", pos_x, pos_y, theta * (180.0 / std::numbers::pi));
 		// Get joystick values
 		int leftY = controller.get_analog(ANALOG_LEFT_Y);
 		int rightY = controller.get_analog(ANALOG_RIGHT_Y);
