@@ -55,9 +55,9 @@ constexpr double MOVE_KP = 1.5;
 constexpr double MOVE_KI = 0.0;
 constexpr double MOVE_KD = 0.0;
 
-constexpr double MOVE_HEADING_KP = 0.08;
+constexpr double MOVE_HEADING_KP = 0.1;
 constexpr double MOVE_HEADING_KI = 0.001;
-constexpr double MOVE_HEADING_KD = 0.002;
+constexpr double MOVE_HEADING_KD = 0.001;
 constexpr double MOVE_HEADING_INTEGRATOR_LIMIT = 0.5;
 
 #endif

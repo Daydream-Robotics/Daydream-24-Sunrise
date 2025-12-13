@@ -30,38 +30,31 @@ void autonomous() {
 	rightMotors.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
 
 	// Move away from parking zone
-	move_dist_pid(10.0, 50, -1, true);
+	travelDistanceWithHeading(-15.0, 50, 0, -1);
 
-	
 	// Turn to farside
 	turn_pid(90, 0);
 
 	// Outtake any balls encountered
-	frontIntake.move(LOW_VOLTAGE);
-	mainIntake.move(LOW_VOLTAGE);
-	backIntake.move(LOW_VOLTAGE);
-
-	for (int i = 0; i < 3; i++) {
-		turn_pid(90, 0);
-		move_dist_pid(30.0, 50, -1, false);
-	}
-
-	
-	// Turn to balls and apprach
-	turn_pid(180, 0);
-	move_dist_pid(27, 50, -1, false);
-	
-	// Intake side balls
 	frontIntake.move(HIGH_VOLTAGE);
 	mainIntake.move(HIGH_VOLTAGE);
+	backIntake.move(HIGH_VOLTAGE);
+
+	// Travel across field
+	travelDistanceWithHeading(90, 50, 90, -1);
+
+	// Turn to balls and approach
+	turn_pid(180, 0);
+	travelDistanceWithHeading(30, 50, 180, -1);
+	
+	// Intake side balls
 	backIntake.move(STOP);
-	move_dist_pid(11, 18, 1750, false);
+	travelDistanceWithHeading(5.0, 18, 180, 1200);
 
 	// Reverse back to matchloader
 	frontIntake.move(STOP);
 	mainIntake.move(STOP);
-	turn_pid(180, 0);
-	move_dist_pid(12.00, 50, -1, true);
+	travelDistanceWithHeading(-13, 50, 180, -1);
 
 	// Turn to matchloader
 	turn_pid(90, 0);
@@ -72,20 +65,17 @@ void autonomous() {
 	mainIntake.move(HIGH_VOLTAGE);
 
 	// Attack matchloader
-	move_dist_pid(11.0, 30, 1500, false);
-	pros::delay(2500);
+	travelDistanceWithHeading(7.0, 30, 90, 1500);
+	pros::delay(3000);
 
 	// Back up
-	move_dist_pid(5, 35, -1, true);
-	turn_pid(90, 0);
-	move_dist_pid(5, 35, -1, true);
+	travelDistanceWithHeading(-10, 35, 90, -1);
 	piston.set_value(false);
 	mainIntake.move(STOP);
 	frontIntake.move(STOP);
 
 	// Approach Long Goal and Unleash
-	move_dist_pid(13, 25, 1000, true);
-
+	travelDistanceWithHeading(-16.75, 25, 90, 2700);
 	mainIntake.move(-MID_VOLTAGE);
 	backIntake.move(-MID_VOLTAGE);
 	pros::delay(300);
@@ -99,33 +89,33 @@ void autonomous() {
 	mainIntake.move(STOP);
 	frontIntake.move(STOP);
 
-	// Back away from long goal
-	move_dist_pid(12, 50, -1, false);
-	turn_pid(0, 0);
+	// // Back away from long goal
+	// move_dist_pid(12, 50, -1, false);
+	// turn_pid(0, 0);
 
-	// Travel to second matchloader and face it
-	move_dist_pid(86, 50, -1, false);
-	turn_pid(90, 0);
+	// // Travel to second matchloader and face it
+	// move_dist_pid(86, 50, -1, false);
+	// turn_pid(90, 0);
 
-	piston.set_value(true);
-	pros::delay(1000);
+	// piston.set_value(true);
+	// pros::delay(1000);
 
-	// Attack matchloader
-	move_dist_pid(9, 15, 1450, false);
-	pros::delay(4000);
+	// // Attack matchloader
+	// move_dist_pid(9, 15, 1450, false);
+	// pros::delay(4000);
 
-	// Back up
-	move_dist_pid(20, 35, -1, true);
-	piston.set_value(false);
+	// // Back up
+	// move_dist_pid(20, 35, -1, true);
+	// piston.set_value(false);
 
-	// Approach Long Goal and Unleash
-	move_dist_pid(5, 15, 1000, true);
-	backIntake.move(LOW_VOLTAGE);
-	pros::delay(4000);
+	// // Approach Long Goal and Unleash
+	// move_dist_pid(5, 15, 1000, true);
+	// backIntake.move(LOW_VOLTAGE);
+	// pros::delay(4000);
 
-	backIntake.move(STOP);
-	mainIntake.move(STOP);
-	frontIntake.move(STOP);
+	// backIntake.move(STOP);
+	// mainIntake.move(STOP);
+	// frontIntake.move(STOP);
 
 }
 
@@ -146,7 +136,14 @@ void opcontrol() {
 		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
 			autonomous();
 		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-			alignDistance(200);
+			// travelDistanceWithHeading(30, 35, 0, -1);
+			// turn_pid(-90, 0);
+			// travelDistanceWithHeading(80, 50, -90, -1);
+			travelDistanceWithHeading(-30, 50, 45, -1);
+		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+			travelDistanceWithHeading(30, 50, 45, -1);
+		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+			turn_pid(45, 0);
 		}
 
 		update_position_and_angle();
