@@ -343,3 +343,27 @@ WheelLengths Autonomous::getOdomWheelTravel(void) {
 
 	return del;
 }
+
+void Autonomous::travelToPoint(double targetX, double targetY, double maxSpeed, bool reverse, double timer) {
+	updatePose();
+	Position start(pos_x, pos_y);
+	double dx = targetX - start.x;
+	double dy = targetY - start.y;
+	
+	double distance = std::hypot(dx, dy); //euclidean distance from start to end point	
+	double targetHeading = std::atan2(dy, dx) * 180.0  / M_PI;
+	
+	if (reverse) {
+		targetHeading += 180;
+		if (targetHeading > 180) targetHeading -= 360;
+		
+		distance = -distance;
+	}
+
+	turnTo(targetHeading);
+	travel(distance, maxSpeed, targetHeading, timer);
+
+	pros::delay(10);
+
+	return;
+}

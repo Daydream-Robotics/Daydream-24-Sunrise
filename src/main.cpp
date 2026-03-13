@@ -2,6 +2,7 @@
 #include "subsystems.h"
 #include "constants.h"
 #include "autonomous.hpp"
+#include "slam.h"
 
 #include <numbers>
 
@@ -13,6 +14,7 @@ void initialize() {
 	while (imu.is_calibrating()) {
 		pros::delay(20);
 	}
+	pros::Task frame_task(UpdateFrame_task_fn, (void*)"PROS_Task_Param", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Vision Frame Update");
 }
 
 void disabled() {}
@@ -24,26 +26,32 @@ void autonomous() {
 	Autonomous auton = Autonomous();
 
 	// Go to matchloader
-	auton.travel(-36, 70, 0);
+	// auton.travel(-36, 70, 0);
+	auton.travelToPoint(-36, 0, 70, true);
 
 	// Turn to matchloader
 	unloader.set_value(true);
 	auton.turnTo(90);
 
-	// Approach matchloader
-	move_intake(STOP, HIGH_VOLTAGE, HIGH_VOLTAGE);
-	auton.travel(16, 50, 90, 1.150);
+	matchload(false);
 
-	// Matchload
-	for (int i = 0; i < 2; i++){
-		auton.travel(-12, 50, 90, 0.15);
-		auton.travel(12, 60, 90, 0.35);
-	 	pros::delay(500);
-	}
-	move_intake(STOP);
+	// // Approach matchloader
+	// move_intake(STOP, HIGH_VOLTAGE, HIGH_VOLTAGE);
+	// auton.travel(16, 50, 90, 1.150);
+
+	// // Matchload
+	// for (int i = 0; i < 2; i++){
+	// 	auton.travel(-12, 50, 90, 0.15);
+	// 	auton.travel(12, 60, 90, 0.35);
+	//  	pros::delay(500);
+	// }
+	// move_intake(STOP);
 
 	// Reverse and score on long goal
-	auton.travel(-50, 80, 75, 2);
+
+	auton.travelToPoint(0, -20, 80, true);
+
+	//auton.travel(-50, 80, 75, 2);
 	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, STOP, 0.2);
 	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 0.1);
 	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, STOP, 0.2);
