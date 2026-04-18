@@ -37,7 +37,7 @@ void Odometry::updatePose(void) {
 
 	// Increment position and angle by calculated changes
 	pos_x += del_x;
-	pos_y += del_y;
+	pos_y -= del_y;
 
 	// print to the controller every 100 ms
 	static uint32_t lastPrintTime = 0;

@@ -129,7 +129,7 @@ Position PurePursuit::convertPtToRobotFrame(Position targetPoint) {
     double robot_heading_deg = odom.getYaw() - 180.0; // Remove the 180 degree offset from getYaw()
     
     double dx = targetPoint.x - robot_x;
-    double dy = targetPoint.y - robot_y;
+    double dy = -(targetPoint.y - robot_y); // Inverted to match the right-positive internal math
 
     // localize displacements relative to orientation of robot
     double robot_heading_rad = convertDegToRad(robot_heading_deg);
