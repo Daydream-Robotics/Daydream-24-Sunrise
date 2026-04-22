@@ -66,7 +66,7 @@ void autonomous() {
 
 	unloader.set_value(true);
 	purePursuit.setPath(als_paths[0]);
-	while (not purePursuit.step(1.0, 0.7)) {
+	while (not purePursuit.step(1.0, 0.8)) {
 		// if ((purePursuit.m_distFromEnd < 10.0 && GetObject(GamePiece::RED_BALL).has_value()) && IsConnected()) { // If we're within 10 inches of the end of the path and we see a red ball, break to collect it
 		// 	break;
 		// }
@@ -89,7 +89,7 @@ void autonomous() {
 	*/
 	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
 	purePursuit.setPath(als_paths[1]);
-    while (not purePursuit.step(-1, 0.5)) {
+    while (not purePursuit.step(-1, 0.6)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 1) {
@@ -163,10 +163,12 @@ void autonomous() {
 	*/
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[4]);
-    while (not purePursuit.step(-1, 0.7)) {
+    while (not purePursuit.step(-1, 0.5)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 1) {
+			leftMotors.move(STOP);
+			rightMotors.move(STOP);
 			break;
 		}
         pros::delay(10);
