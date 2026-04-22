@@ -63,15 +63,17 @@ void autonomous() {
 	After Path Action: Use AI to collect balls from the mathloader
 	Path Notes: Has the Overshoot points
 	*/
-
+	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
 	unloader.set_value(true);
 	purePursuit.setPath(als_paths[0]);
-	while (not purePursuit.step(1.0, 0.7)) {
-		// if ((purePursuit.m_distFromEnd < 10.0 && GetObject(GamePiece::RED_BALL).has_value()) && IsConnected()) { // If we're within 10 inches of the end of the path and we see a red ball, break to collect it
-		// 	break;
-		// }
-		pros::delay(10);
-	}
+    while (not purePursuit.step(1, 1)) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
+		if (elapsed > 3) {
+			break;
+		}
+        pros::delay(10);
+    }
 	
 
 	///////////////
@@ -83,13 +85,13 @@ void autonomous() {
 
 	/* 
 	Path Name: Score
-	Path Action: Goes to the goal
-	After Path Action: Outakes all balls
-	Path Notes: N/A
+	Path Action: 
+	After Path Action: 
+	Path Notes: 
 	*/
-	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
+	stepStartTime = std::chrono::high_resolution_clock::now(); 
 	purePursuit.setPath(als_paths[1]);
-    while (not purePursuit.step(-1, 0.5)) {
+    while (not purePursuit.step(-1, 1)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 1) {
@@ -98,9 +100,62 @@ void autonomous() {
         pros::delay(10);
     }
 
-
-	// Jitter
 	///////////////
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 1);
+	//pros::delay(2000);
+	// move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
+	// pros::delay(150);
+	// move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 0.500);
+	// pros::delay(150);
+	// // move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
+	// pros::delay(150);
+	// move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
+	///////////////
+
+
+
+	///////////////
+
+	///////////////
+
+
+
+	///////////////
+
+	///////////////
+
+
+	/* 
+	Path Name: 
+	Path Action: 
+	After Path Action: 
+	Path Notes: 
+	*/
+
+	purePursuit.setPath(als_paths[2]);
+	while (not purePursuit.step(1.0, 0.8)) {
+		pros::delay(10);
+		move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
+		
+	}
+
+	//////////
+	matchload(false);
+
+
+	stepStartTime = std::chrono::high_resolution_clock::now();
+	purePursuit.setPath(als_paths[3]);
+    while (not purePursuit.step(-1, 0.5)) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
+		if (elapsed > 4) {
+			break;
+		}
+        pros::delay(10);
+    }
+	
+	centerScore.toggle();
+	
 	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 2);
 	//pros::delay(2000);
 	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
@@ -111,103 +166,34 @@ void autonomous() {
 	pros::delay(150);
 	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
 	pros::delay(1000);
-	///////////////
 
-	unloader.set_value(false);
+	
 
-
-	/* 
-	Path Name: WallBalls
-	Path Action: Arrives to other side of the field from in between the middle goal and the long goal. Faces the wall balls.
-	After Path Action: Use AI to collect balls from the wall
-	Path Notes: When it goes in between the long goal and the middle goal, it will run through the line of balls. Also has overshoot points.
-	*/
-	purePursuit.setPath(als_paths[2]);
-	while (not purePursuit.step(1.0, 1.0)) {
-		pros::delay(10);
-	}
-
-
-	///////////////
-	collect(GamePiece::RED_BALL, 4);
-	///////////////
 
 
 
 
 	/* 
-	Path Name: Matchload
-	Path Action: Goes to the matchloader
-	After Path Action: Use AI to collect balls from the mathloader
-	Path Notes: Has its starting point on the bottom left corner of the blue parking tile. Robot should travel to it then go face the matchloader. Has overshoot points
+	Path Name: 
+	Path Action: 
+	After Path Action: 
+	Path Notes: 
 	*/
-	// purePursuit.setPath(als_paths[3]);
-	// while (not purePursuit.step(-1)) {
+	// purePursuit.setPath(als_paths[2]);
+	// while (not purePursuit.step(1.0, 1.0)) {
 	// 	pros::delay(10);
 	// }
-// 38.67, 92.44;
-	auton.travelToPoint(28.67, 92.44, 100, true, -1);	
-	auton.turnTo(100);
-
-
-	///////////////
-	matchload(true);
-	///////////////
-
-
-	/* 
-	Path Name: Score
-	Path Action: Goes to the goal
-	After Path Action: Outakes all balls
-	Path Notes: N/A
-	*/
-	stepStartTime = std::chrono::high_resolution_clock::now();
-	purePursuit.setPath(als_paths[4]);
-    while (not purePursuit.step(-1, 0.7)) {
-		auto currentTime = std::chrono::high_resolution_clock::now();
-    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
-		if (elapsed > 1) {
-			break;
-		}
-        pros::delay(10);
-    }
-
-	unloader.set_value(false);
-
-
-	// Jitter
-	///////////////
-	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 2);
-	pros::delay(2000);
-	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
-	pros::delay(150);
-	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 0.300);
-	pros::delay(150);
-	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
-	pros::delay(150);
-	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
-	pros::delay(1000);
-	///////////////
-
-
-
-
-	/* 
-	Path Name: Park
-	Path Action: Travels to other side of the field from between the wall and long goal and attempts to park
-	After Path Action: N/A (hopefully it can be one piece)
-	Path Notes: Odom will jump but should be fine due to it being the end of the path. Has overshoot points.
-	*/
-	purePursuit.setPath(als_paths[5]);
-	while (not purePursuit.step(1.0, 1.0)) {
-		pros::delay(10);
-	}
 
 
 
 	/*//////////////
-	
+	matchload(false);
 	//////////////*/
+
+	// purePursuit.setPath(als_paths[3]);
+	// while (not purePursuit.step(1.0, 1.0)) {
+	// 	pros::delay(10);
+	// }
 }
 
 void opcontrol() {
@@ -391,3 +377,39 @@ void drive(DriveType type) {
 		}
 	}
 }
+
+
+	// Jitter
+	/*//////////////
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 2);
+	//pros::delay(2000);
+	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
+	pros::delay(150);
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 0.300);
+	pros::delay(150);
+	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
+	pros::delay(150);
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
+	pros::delay(1000);
+
+
+
+	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
+	purePursuit.setPath(als_paths[1]);
+    while (not purePursuit.step(-1, 0.5)) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
+		if (elapsed > 1) {
+			break;
+		}
+        pros::delay(10);
+    }
+	//////////////*/
+
+
+	/* 
+	Path Name: 
+	Path Action: 
+	After Path Action: 
+	Path Notes: 
+	*/
