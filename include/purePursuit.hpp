@@ -20,7 +20,7 @@ constexpr double TURN_RATE = 16;  // Moderated to prevent aggressive oscillation
 
 constexpr double SPEED_ADJUSTMENT_CONST = 10; // 10 15 Reduced to prevent the robot from over-braking on curves
 constexpr int MIN_BASE_VEL = 30;
-constexpr int MAX_BASE_VEL = 100;
+constexpr int MAX_BASE_VEL = 150;
 
 constexpr double END_TOLERANCE = 0.5;
 constexpr double END_SLOWDOWN_THRESH = 20.0;
@@ -41,7 +41,7 @@ class PurePursuit {
         double getLookaheadDist();
 
         // returns base velocity based off curvature to target point and distance to end of path
-        int getBaseVelocity(double curvature);
+        int getBaseVelocity(double curvature, double speedPercentage = 1.0);
             
         // update ghost point to cast past end point
         Position updateGhostPoint();
@@ -61,7 +61,7 @@ class PurePursuit {
 
         void setPath(ALS_Path& als_path);
 
-        bool step(double velocityDirection = 1.0); // Direction = 1 for forward, -1 for reverse
+        bool step(double velocityDirection = 1.0, double speedPercentage = 1.0); // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
 
         double m_totalDistOff = 0;
         double m_distFromEnd;
