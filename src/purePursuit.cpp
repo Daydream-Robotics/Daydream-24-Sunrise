@@ -156,7 +156,7 @@ double PurePursuit::getLookaheadDist() {
 
 int PurePursuit::getBaseVelocity(double curvature, double speedPercentage) {
     int adjusted_base_vel = MAX_BASE_VEL * speedPercentage;
-    int base_vel = MAX_BASE_VEL / (1 + (std::abs(curvature) * SPEED_ADJUSTMENT_CONST));
+    int base_vel = adjusted_base_vel / (1 + (std::abs(curvature) * SPEED_ADJUSTMENT_CONST));
     int min_base_adjusted = MIN_BASE_VEL;
 
     // Further reduce speed if we're close to the end of the path to prevent overshooting

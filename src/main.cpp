@@ -66,7 +66,7 @@ void autonomous() {
 
 	unloader.set_value(true);
 	purePursuit.setPath(als_paths[0]);
-	while (not purePursuit.step()) {
+	while (not purePursuit.step(1.0, 0.7)) {
 		// if ((purePursuit.m_distFromEnd < 10.0 && GetObject(GamePiece::RED_BALL).has_value()) && IsConnected()) { // If we're within 10 inches of the end of the path and we see a red ball, break to collect it
 		// 	break;
 		// }
@@ -89,7 +89,7 @@ void autonomous() {
 	*/
 	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
 	purePursuit.setPath(als_paths[1]);
-    while (not purePursuit.step(-1)) {
+    while (not purePursuit.step(-1, 0.5)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 1) {
@@ -113,7 +113,7 @@ void autonomous() {
 	pros::delay(1000);
 	///////////////
 
-
+	unloader.set_value(false);
 
 
 	/* 
@@ -123,13 +123,12 @@ void autonomous() {
 	Path Notes: When it goes in between the long goal and the middle goal, it will run through the line of balls. Also has overshoot points.
 	*/
 	purePursuit.setPath(als_paths[2]);
-	while (not purePursuit.step()) {
+	while (not purePursuit.step(1.0, 1.0)) {
 		pros::delay(10);
 	}
 
 
 	///////////////
-	unloader.set_value(false);
 	collect(GamePiece::RED_BALL, 4);
 	///////////////
 
@@ -164,7 +163,7 @@ void autonomous() {
 	*/
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[4]);
-    while (not purePursuit.step(-1)) {
+    while (not purePursuit.step(-1, 0.7)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 1) {
@@ -200,7 +199,7 @@ void autonomous() {
 	Path Notes: Odom will jump but should be fine due to it being the end of the path. Has overshoot points.
 	*/
 	purePursuit.setPath(als_paths[5]);
-	while (not purePursuit.step()) {
+	while (not purePursuit.step(1.0, 1.0)) {
 		pros::delay(10);
 	}
 
