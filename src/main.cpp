@@ -205,6 +205,18 @@ void autonomous() {
 		pros::delay(10);
 	}
 
+	/*
+	Path Name: Park
+	Path Action: Parks on the parking zone
+	After Path Action: 
+	*/
+
+	leftMotors.move(HIGH_VOLTAGE);
+	rightMotors.move(HIGH_VOLTAGE);
+	pros::delay(1100);
+	leftMotors.move(STOP);
+	rightMotors.move(STOP);
+
 
 
 	/*//////////////
