@@ -9,6 +9,7 @@
 #include "paths.hpp"
 #include "sd_card_logging.hpp"
 #include "purePursuit.hpp"
+#include <chrono>
 
 // ALS_Path als_path1;
 // ALS_Path als_path2;
@@ -52,13 +53,18 @@ void disabled() {}
 void competition_initialize() {}
 //all after path actions are commented out for path testing purposes
 void autonomous() {
-
+	double lastDist = 999.0;
+    double curDist = 0;
+    double distChangedPercent = 0.0;
+    int collisionCounter = 0;
 	/* 
 	Path Name: Matchload
 	Path Action: Goes to the matchloader
 	After Path Action: Use AI to collect balls from the mathloader
 	Path Notes: Has the Overshoot points
 	*/
+
+	unloader.set_value(true);
 	purePursuit.setPath(als_paths[0]);
 	while (not purePursuit.step()) {
 		// if ((purePursuit.m_distFromEnd < 10.0 && GetObject(GamePiece::RED_BALL).has_value()) && IsConnected()) { // If we're within 10 inches of the end of the path and we see a red ball, break to collect it
@@ -68,9 +74,9 @@ void autonomous() {
 	}
 	
 
-	/*//////////////
+	///////////////
 	matchload(false);
-	//////////////*/
+	///////////////
 
 
 
@@ -81,16 +87,31 @@ void autonomous() {
 	After Path Action: Outakes all balls
 	Path Notes: N/A
 	*/
+	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
 	purePursuit.setPath(als_paths[1]);
-	while (not purePursuit.step(-1)) {
-		pros::delay(10);
-	}
+    while (not purePursuit.step(-1)) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
+		if (elapsed > 1) {
+			break;
+		}
+        pros::delay(10);
+    }
 
 
-	/*//////////////
-	move_intake(HIGH, HIGH, HIGH, 2);
-	pros::delay(2000);
-	//////////////*/
+	// Jitter
+	///////////////
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 2);
+	//pros::delay(2000);
+	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
+	pros::delay(150);
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 0.300);
+	pros::delay(150);
+	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
+	pros::delay(150);
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
+	pros::delay(1000);
+	///////////////
 
 
 
@@ -107,9 +128,10 @@ void autonomous() {
 	}
 
 
-	/*//////////////
+	///////////////
+	unloader.set_value(false);
 	collect(GamePiece::RED_BALL, 4);
-	//////////////*/
+	///////////////
 
 
 
@@ -121,18 +143,17 @@ void autonomous() {
 	Path Notes: Has its starting point on the bottom left corner of the blue parking tile. Robot should travel to it then go face the matchloader. Has overshoot points
 	*/
 	// purePursuit.setPath(als_paths[3]);
-	// while (not purePursuit.step()) {
+	// while (not purePursuit.step(-1)) {
 	// 	pros::delay(10);
 	// }
+// 38.67, 92.44;
+	auton.travelToPoint(28.67, 92.44, 100, true, -1);	
+	auton.turnTo(100);
 
-	
 
-
-	/*//////////////
+	///////////////
 	matchload(true);
-	//////////////*/
-
-
+	///////////////
 
 
 	/* 
@@ -141,16 +162,33 @@ void autonomous() {
 	After Path Action: Outakes all balls
 	Path Notes: N/A
 	*/
+	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[4]);
-	while (not purePursuit.step()) {
-		pros::delay(10);
-	}
+    while (not purePursuit.step(-1)) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
+		if (elapsed > 1) {
+			break;
+		}
+        pros::delay(10);
+    }
+
+	unloader.set_value(false);
 
 
-	/*//////////////
-	move_intake(HIGH, HIGH, HIGH, 2);
+	// Jitter
+	///////////////
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 2);
 	pros::delay(2000);
-	//////////////*/
+	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
+	pros::delay(150);
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 0.300);
+	pros::delay(150);
+	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
+	pros::delay(150);
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
+	pros::delay(1000);
+	///////////////
 
 
 
@@ -354,4 +392,3 @@ void drive(DriveType type) {
 		}
 	}
 }
-
