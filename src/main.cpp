@@ -65,7 +65,7 @@ void autonomous() {
 	*/
 
 	unloader.set_value(true);
-	purePursuit.setPath(als_paths[0]);
+	purePursuit.setPath(als_paths[MATCHLOAD]);
 	while (not purePursuit.step(1.0, 0.8)) {
 		// if ((purePursuit.m_distFromEnd < 10.0 && GetObject(GamePiece::RED_BALL).has_value()) && IsConnected()) { // If we're within 10 inches of the end of the path and we see a red ball, break to collect it
 		// 	break;
@@ -75,7 +75,7 @@ void autonomous() {
 	
 
 	///////////////
-	matchload(false);
+	//matchload(false);
 	///////////////
 
 
@@ -88,7 +88,7 @@ void autonomous() {
 	Path Notes: N/A
 	*/
 	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
-	purePursuit.setPath(als_paths[1]);
+	purePursuit.setPath(als_paths[SCORE]);
     while (not purePursuit.step(-1, 0.6)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
@@ -103,19 +103,22 @@ void autonomous() {
 
 	// Jitter; reverse for 100 ms, score for 625 ms
 	///////////////
-	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.100);
-	pros::delay(150);
-	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 0.625);
-	pros::delay(625);
-	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 1000);
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 1);
+	pros::delay(1000);
+	move_intake(STOP, STOP, STOP);
 	///////////////
 
 	unloader.set_value(false);
 	descorer.set_value(true);
 
 
-	purePursuit.setPath(als_paths[PATH]);
-	while (not purePursuit.step(1, 1)) {
+	purePursuit.setPath(als_paths[OUT]);
+	while (not purePursuit.step(1, 0.8)) {
+		pros::delay(10);
+	}
+
+	purePursuit.setPath(als_paths[WING]);
+	while (not purePursuit.step(-1, 0.8)) {
 		pros::delay(10);
 	}
 
