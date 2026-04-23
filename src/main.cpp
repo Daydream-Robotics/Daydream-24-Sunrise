@@ -63,13 +63,15 @@ void autonomous() {
 	After Path Action: Use AI to collect balls from the mathloader
 	Path Notes: Has the Overshoot points
 	*/
-
+	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
 	unloader.set_value(true);
 	purePursuit.setPath(als_paths[MATCHLOAD]);
-	while (not purePursuit.step(1.0, 0.8)) {
-		// if ((purePursuit.m_distFromEnd < 10.0 && GetObject(GamePiece::RED_BALL).has_value()) && IsConnected()) { // If we're within 10 inches of the end of the path and we see a red ball, break to collect it
-		// 	break;
-		// }
+	while (not purePursuit.step(1.0, 1)) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
+		if (elapsed > 2) {
+			break;
+		}
 		pros::delay(10);
 	}
 	
@@ -87,7 +89,7 @@ void autonomous() {
 	After Path Action: Outakes all balls
 	Path Notes: N/A
 	*/
-	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
+	stepStartTime = std::chrono::high_resolution_clock::now(); 
 	purePursuit.setPath(als_paths[SCORE]);
     while (not purePursuit.step(-1, 0.6)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
@@ -112,8 +114,14 @@ void autonomous() {
 	descorer.set_value(true);
 
 
+	stepStartTime = std::chrono::high_resolution_clock::now(); 
 	purePursuit.setPath(als_paths[OUT]);
 	while (not purePursuit.step(1, 0.8)) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+    	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - stepStartTime).count();
+		if (elapsed > 1300) {
+			break;
+		}
 		pros::delay(10);
 	}
 

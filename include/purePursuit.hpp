@@ -14,7 +14,7 @@ constexpr double MAX_LOOKAHEAD_DIST = 25.0;
 constexpr double MIN_LOOKAHEAD_DIST = 18.0;
 constexpr double LOOKAHEAD_SECONDS = 0.6; // 0.6 this it the amount of time the robot looks ahead of it for pure pursuit
 
-constexpr double TURN_RATE = 16;  // Moderated to prevent aggressive oscillation lo 5
+constexpr double TURN_RATE = 14.5;  // Moderated to prevent aggressive oscillation lo 5
 
 // constexpr int MAX_VIEWABLE_INDEX_AHEAD = 10;
 
