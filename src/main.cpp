@@ -69,7 +69,7 @@ void autonomous() {
     while (not purePursuit.step(1, 1)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
-		if (elapsed > 3) {
+		if (elapsed > 2) {
 			break;
 		}
         pros::delay(10);
@@ -132,12 +132,16 @@ void autonomous() {
 	Path Notes: 
 	*/
 
+	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[2]);
-	while (not purePursuit.step(1.0, 0.8)) {
-		pros::delay(10);
-		move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
-		
-	}
+    while (not purePursuit.step(1, 0.8)) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
+		if (elapsed > 0.5) {
+			break;
+		}
+        pros::delay(10);
+    }
 
 	//////////
 	matchload(false);
@@ -145,7 +149,7 @@ void autonomous() {
 
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[3]);
-    while (not purePursuit.step(-1, 0.5)) {
+    while (not purePursuit.step(-1, 0.6)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 4) {
@@ -158,17 +162,22 @@ void autonomous() {
 	
 	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 2);
 	//pros::delay(2000);
-	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
-	pros::delay(150);
-	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 0.300);
-	pros::delay(150);
-	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
-	pros::delay(150);
-	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
-	pros::delay(1000);
-
 	
+	descorer.toggle();
+	
+	stepStartTime = std::chrono::high_resolution_clock::now();
+	purePursuit.setPath(als_paths[4]);
+    while (not purePursuit.step(1, 1)) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
+		if (elapsed > 2) {
+			break;
+		}
+        pros::delay(10);
+    }
 
+	leftMotors.brake();
+	rightMotors.brake();
 
 
 
