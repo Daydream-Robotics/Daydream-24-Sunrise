@@ -53,10 +53,6 @@ void disabled() {}
 void competition_initialize() {}
 //all after path actions are commented out for path testing purposes
 void autonomous() {
-	double lastDist = 999.0;
-    double curDist = 0;
-    double distChangedPercent = 0.0;
-    int collisionCounter = 0;
 	/* 
 	Path Name: Matchload
 	Path Action: Goes to the matchloader

@@ -61,7 +61,7 @@ class PurePursuit {
 
         void setPath(ALS_Path& als_path);
 
-        bool step(double velocityDirection = 1.0, double speedPercentage = 1.0); // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
+        bool step(double velocityDirection = 1.0, double speedPercentage = 1.0, double turnRateOverride = TURN_RATE); // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
 
         double m_totalDistOff = 0;
         double m_distFromEnd;

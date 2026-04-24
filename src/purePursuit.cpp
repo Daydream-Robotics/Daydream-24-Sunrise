@@ -22,7 +22,7 @@ void PurePursuit::setPath(ALS_Path& als_path) {
     m_ghostPoint = updateGhostPoint();
 }
 
-bool PurePursuit::step(double velocityDirection, double speedPercentage) { // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
+bool PurePursuit::step(double velocityDirection, double speedPercentage, double turnRateOverride) { // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
     // Safety check to prevent a data abort if the path is empty/invalid
     if (!m_als_path->isValid() || m_als_path->getSamples().empty()) {
         leftMotors.move_velocity(0);

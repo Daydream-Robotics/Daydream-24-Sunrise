@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "MatchMid",
+    "project_name": "M_AWP",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -593,7 +593,7 @@
     },
     "upload_options": {
       "slot": 5,
-      "icon": "pizza",
+      "icon": "X",
       "description": "My PROS Project"
     },
     "use_early_access": false
