@@ -53,10 +53,6 @@ void disabled() {}
 void competition_initialize() {}
 //all after path actions are commented out for path testing purposes
 void autonomous() {
-	double lastDist = 999.0;
-    double curDist = 0;
-    double distChangedPercent = 0.0;
-    int collisionCounter = 0;
 	/* 
 	Path Name: Matchload
 	Path Action: Goes to the matchloader
@@ -77,7 +73,7 @@ void autonomous() {
 	
 
 	///////////////
-	//matchload(false);
+	matchload(false);
 	///////////////
 
 
@@ -106,7 +102,6 @@ void autonomous() {
 	// Jitter; reverse for 100 ms, score for 625 ms
 	///////////////
 	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 1);
-	pros::delay(1000);
 	move_intake(STOP, STOP, STOP);
 	///////////////
 

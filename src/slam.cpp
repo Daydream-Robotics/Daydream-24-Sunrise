@@ -171,7 +171,7 @@ void collect(GamePiece gamePiece, int isLoading)
 
         
         if(isLoading == 3){
-            if(empty_frames > 2 || humpCount > 4 && humpCount >1)return;
+            if(empty_frames > 2 || humpCount > 0)return;
 
             // pros::lcd::print(5, "is loading = %d", isLoading);
             leftMotors.move_velocity(-20);
