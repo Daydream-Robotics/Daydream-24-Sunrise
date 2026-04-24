@@ -65,7 +65,7 @@ void autonomous() {
     while (not purePursuit.step(1, 1.3)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
-		if (elapsed > 2) {
+		if (elapsed > 1) {
 			break;
 		}
         pros::delay(10);
@@ -87,7 +87,7 @@ void autonomous() {
 	*/
 	stepStartTime = std::chrono::high_resolution_clock::now(); 
 	purePursuit.setPath(als_paths[1]);
-    while (not purePursuit.step(-1, .7)) {
+    while (not purePursuit.step(-1, .7, 10)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 1) {
@@ -97,7 +97,7 @@ void autonomous() {
     }
 
 	///////////////
-	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, .7);
+	// move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, .6);
 	//pros::delay(2000);
 	// move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
 	// pros::delay(150);
@@ -127,10 +127,10 @@ void autonomous() {
 	After Path Action: 
 	Path Notes: 
 	*/
-
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[2]);
-    while (not purePursuit.step(1, 1.5)) {
+    while (not purePursuit.step(1, 1)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
@@ -146,7 +146,7 @@ void autonomous() {
 
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[3]);
-    while (not purePursuit.step(-1, 0.6)) {
+    while (not purePursuit.step(-1, 0.8, 8)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 4) {
@@ -161,10 +161,11 @@ void autonomous() {
 	//pros::delay(2000);
 	
 	descorer.toggle();
+	unloader.toggle();
 	
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[4]);
-    while (not purePursuit.step(1, 2)) {
+    while (not purePursuit.step(1, 1.5)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 2) {
