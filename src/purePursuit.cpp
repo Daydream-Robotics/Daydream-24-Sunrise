@@ -22,7 +22,7 @@ void PurePursuit::setPath(ALS_Path& als_path) {
     m_ghostPoint = updateGhostPoint();
 }
 
-bool PurePursuit::step(double velocityDirection, double speedPercentage) { // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
+bool PurePursuit::step(double velocityDirection, double speedPercentage, double turnRateOverride) { // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
     // Safety check to prevent a data abort if the path is empty/invalid
     if (!m_als_path->isValid() || m_als_path->getSamples().empty()) {
         leftMotors.move_velocity(0);
@@ -71,8 +71,8 @@ bool PurePursuit::step(double velocityDirection, double speedPercentage) { // Di
     int base_vel = static_cast<int>(getBaseVelocity(pathMaxCurvature, speedPercentage) * velocityDirection);
     // Direction is selected externally for the whole path.
     // !IMPORTANT! If reverse tracking steers the wrong way, flip the sign of curvature
-    double left_target = base_vel + (steeringCurvature * base_vel * TURN_RATE);
-    double right_target = base_vel - (steeringCurvature * base_vel * TURN_RATE);
+    double left_target = base_vel + (steeringCurvature * base_vel * turnRateOverride);
+    double right_target = base_vel - (steeringCurvature * base_vel * turnRateOverride);
 
     // Maintain the turn ratio if the requested velocity exceeds the motor's physical limit
     double max_req = std::max(std::abs(left_target), std::abs(right_target));
