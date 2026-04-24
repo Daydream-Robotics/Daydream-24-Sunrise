@@ -25,7 +25,8 @@ void Odometry::updatePose(void) {
 	double del_theta = normalizeAngle(theta - prevTheta);
 
 	// Determine change in local x and in local y
-	double dx_local = arcs.parallel;
+	double dx_local = arcs.parallel - (del_theta * PARALLEL_TRACKING_WHEEL_OFFSET); //new
+	
 	double dy_local = arcs.perpendicular - (del_theta * PERPINDICULAR_TRACKING_WHEEL_DISTANCE);
 
 	double theta_mid = prevTheta + del_theta / 2.0;

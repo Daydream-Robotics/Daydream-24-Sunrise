@@ -62,7 +62,7 @@ void autonomous() {
 	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
 	unloader.set_value(true);
 	purePursuit.setPath(als_paths[0]);
-    while (not purePursuit.step(1, 1)) {
+    while (not purePursuit.step(1, 1.3)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 2) {
@@ -87,7 +87,7 @@ void autonomous() {
 	*/
 	stepStartTime = std::chrono::high_resolution_clock::now(); 
 	purePursuit.setPath(als_paths[1]);
-    while (not purePursuit.step(-1, .8)) {
+    while (not purePursuit.step(-1, .7)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 1) {
@@ -97,7 +97,7 @@ void autonomous() {
     }
 
 	///////////////
-	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 1);
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, .7);
 	//pros::delay(2000);
 	// move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
 	// pros::delay(150);
@@ -130,7 +130,7 @@ void autonomous() {
 
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[2]);
-    while (not purePursuit.step(1, 0.8)) {
+    while (not purePursuit.step(1, 1.5)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
@@ -164,7 +164,7 @@ void autonomous() {
 	
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[4]);
-    while (not purePursuit.step(1, 1)) {
+    while (not purePursuit.step(1, 2)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 2) {
