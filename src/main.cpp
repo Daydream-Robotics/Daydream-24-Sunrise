@@ -65,7 +65,7 @@ void autonomous() {
     while (not purePursuit.step(1, 1.3)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
-		if (elapsed > 1) {
+		if (elapsed > 1.4) {
 			break;
 		}
         pros::delay(10);
@@ -73,7 +73,7 @@ void autonomous() {
 	
 
 	///////////////
-	matchload(false);
+	matchload(true);
 	///////////////
 
 
@@ -90,14 +90,14 @@ void autonomous() {
     while (not purePursuit.step(-1, .7, 10)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
-		if (elapsed > 1) {
+		if (elapsed > 2) {
 			break;
 		}
         pros::delay(10);
     }
 
 	///////////////
-	// move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, .6);
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, .7);
 	//pros::delay(2000);
 	// move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, 0.300);
 	// pros::delay(150);
@@ -132,16 +132,16 @@ void autonomous() {
 	purePursuit.setPath(als_paths[2]);
     while (not purePursuit.step(1, 1)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
-    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
+    	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - stepStartTime).count();
 		move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
-		if (elapsed > 0.5) {
+		if (elapsed > 500) {
 			break;
 		}
         pros::delay(10);
     }
 
 	//////////
-	matchload(false);
+	matchload(true);
 
 
 	stepStartTime = std::chrono::high_resolution_clock::now();
@@ -162,6 +162,7 @@ void autonomous() {
 	
 	descorer.toggle();
 	unloader.toggle();
+	centerScore.toggle();
 	
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[4]);
@@ -202,115 +203,134 @@ void autonomous() {
 	// 	pros::delay(10);
 	// }
 }
-
 void opcontrol() {
-	// Set chassis brake mode to coast
-
-	
-	// Autonomous auton = Autonomous();
-
-	// // Go to matchloader
-	// // auton.travel(-36, 70, 0);
-
-	// // Turn to matchloader
-	// // unloader.set_value(true);
-	// // auton.turnTo(90);
-
-	//  matchload(false);
-
-	// collect(GamePiece::RED_BALL, 4);
-
-	 
+    // Set chassis brake mode to coast
 
 
-	leftMotors.set_brake_mode_all(pros::E_MOTOR_BRAKE_COAST);
-	rightMotors.set_brake_mode_all(pros::E_MOTOR_BRAKE_COAST);
+    // Autonomous auton = Autonomous();
 
-	frontIntake.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-	backIntake.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    // // Go to matchloader
+    // // auton.travel(-36, 70, 0);
 
-	while(true){
+    // // Turn to matchloader
+    // // unloader.set_value(true);
+    // // auton.turnTo(90);
 
-		/* - - - - - - - - - - - - - - [CHASSIS CONTROLS] - - - - - - - - - - - - - - */
+    //  matchload(false);
 
-		drive(DriveType::TANK);
-
-		/* - - - - - - - - - - - - - - [MATCH UNLOADER] - - - - - - - - - - - - - - */
-
-		if (controller.get_digital_new_press(DIGITAL_L1)) {
-			unloader.toggle();
-		}
-
-		/* - - - - - - - - - - - - - - [CENTER TOGGLE] - - - - - - - - - - - - - - */
-
-		if (controller.get_digital_new_press(DIGITAL_A)) {
-			centerScore.toggle();
-		}
-
-
-		/* - - - - - - - - - - - - - - [DESCORE TOGGLE] - - - - - - - - - - - - - - */
-
-		if (controller.get_digital_new_press(DIGITAL_L2)) {
-			descorer.toggle();
-		}
-
-		/* - - - - - - - - - - - - - - - - [AI] - - - - - - - - - - - - - - - - - - */
-		
-		//Matchloads redballs on the bottom and blue balls on the top
-		if(controller.get_digital_new_press(DIGITAL_LEFT)){
-			matchload(false);
-		}
-
-		//collects the red balls off the wall
-		if(controller.get_digital_new_press(DIGITAL_RIGHT)){
-			collect(GamePiece::RED_BALL, 4);
-		}
-
-		//collects a single red ball
-		if(controller.get_digital_new_press(DIGITAL_DOWN)){
-			collect(GamePiece::RED_BALL);
-		}
-
-		//tracks a red ball by turning the robot but not by approaching it
-		if(controller.get_digital_new_press(DIGITAL_UP)){
-			trackingMode(GamePiece::RED_BALL);
-		}
-
-		//collects red balls until the button is pressed again (hold down the button)
-		if(controller.get_digital_new_press(DIGITAL_Y)){
-			while(true){
-				collect(GamePiece::RED_BALL);
-
-				if(controller.get_digital_new_press(DIGITAL_Y)){
-					break;
-				}
-			}
-		}
-
-
-		
-		/* - - - - - - - - - - - - - - [INTAKE] - - - - - - - - - - - - - - */
-		// Main intake
-		if (controller.get_digital(DIGITAL_R1)) { // intake
-			move_intake(STOP, HIGH_VOLTAGE, HIGH_VOLTAGE);
-		} else if (controller.get_digital(DIGITAL_R2)){ // outtake
-			move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
-		} else if (controller.get_digital(DIGITAL_L1)){ // score
-			//descorer.toggle();
-		} else if (controller.get_digital(DIGITAL_B)) { // full outtake
-			move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE);
-		} else {
-			move_intake(STOP);
-		}
+    // collect(GamePiece::RED_BALL, 4);
 
 
 
-		// Delay added to prevent crashing
-		pros::delay(20);
-	}
 
-	
+    leftMotors.set_brake_mode_all(pros::E_MOTOR_BRAKE_COAST);
+    rightMotors.set_brake_mode_all(pros::E_MOTOR_BRAKE_COAST);
+
+    frontIntake.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    backIntake.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+
+    while(true){
+
+        drive(DriveType::SPLIT_ARCADE);
+
+        if (controller.get_digital(DIGITAL_L1)) {
+            descorer.set_value(true);
+        } else {
+            descorer.set_value(false);
+        }
+
+        if (controller.get_digital(DIGITAL_Y)) {
+            unloader.set_value(true);
+        } else {
+            unloader.set_value(false);
+        }
+
+        if (controller.get_digital(DIGITAL_R1)) { // intake
+            move_intake(STOP, HIGH_VOLTAGE, HIGH_VOLTAGE);
+        } else if (controller.get_digital(DIGITAL_R2)){ // full score
+            move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
+        } else if (controller.get_digital(DIGITAL_L2)){ // score
+            centerScore.set_value(true);
+            move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
+        } else if (controller.get_digital(DIGITAL_RIGHT)) { // full outtake
+            move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE);
+        } else {
+            centerScore.set_value(false);
+            move_intake(STOP, STOP, STOP);
+        }
+
+        // /* - - - - - - - - - - - - - - [CHASSIS CONTROLS] - - - - - - - - - - - - - - /
+
+        // drive(DriveType::TANK);
+
+        // / - - - - - - - - - - - - - - [MATCH UNLOADER] - - - - - - - - - - - - - - /
+
+        // if (controller.get_digital_new_press(DIGITAL_L1)) {
+        //     unloader.toggle();
+        // }
+
+        // / - - - - - - - - - - - - - - [CENTER TOGGLE] - - - - - - - - - - - - - - /
+
+        // if (controller.get_digital_new_press(DIGITAL_A)) {
+        //     centerScore.toggle();
+        // }
+
+
+        // / - - - - - - - - - - - - - - [DESCORE TOGGLE] - - - - - - - - - - - - - - /
+
+        // if (controller.get_digital_new_press(DIGITAL_L2)) {
+        //     descorer.toggle();
+        // }
+
+
+        // / - - - - - - - - - - - - - - - - [AI] - - - - - - - - - - - - - - - - - - /
+
+        // //Matchloads redballs on the bottom and blue balls on the top
+        // if(controller.get_digital_new_press(DIGITAL_LEFT)){
+        //     matchload(false);
+        // }
+
+        // //collects the red balls off the wall
+        // if(controller.get_digital_new_press(DIGITAL_RIGHT)){
+        //     collect(GamePiece::RED_BALL, 4);
+        // }
+
+        // //collects a single red ball
+        // if(controller.get_digital_new_press(DIGITAL_DOWN)){
+        //     collect(GamePiece::RED_BALL);
+        // }
+
+        // //tracks a red ball by turning the robot but not by approaching it
+        // if(controller.get_digital_new_press(DIGITAL_UP)){
+        //     trackingMode(GamePiece::RED_BALL);
+        // }
+
+        // //collects red balls until the button is pressed again (hold down the button)
+        // if(controller.get_digital_new_press(DIGITAL_Y)){
+        //     while(true){
+        //         collect(GamePiece::RED_BALL);
+
+        //         if(controller.get_digital_new_press(DIGITAL_Y)){
+        //             break;
+        //         }
+        //     }
+        // }
+
+
+
+        // / - - - - - - - - - - - - - - [INTAKE] - - - - - - - - - - - - - - */
+        // // Main intake
+
+
+
+
+        // // Delay added to prevent crashing
+        // pros::delay(20);
+    }
+
+
 }
+
 
 void move_intake(int front, int mid, int back, double seconds) {
 
