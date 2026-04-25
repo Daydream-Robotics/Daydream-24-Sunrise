@@ -11,7 +11,7 @@ void Odometry::updatePose(void) {
 	const double yaw = getYaw();
 
 	if (yaw < 0) {
-		pros::lcd::print(0, "[Update Pose] IMU Failure!");
+		// pros::lcd::print(0, "[Update Pose] IMU Failure!");
 		return;
 	}
 

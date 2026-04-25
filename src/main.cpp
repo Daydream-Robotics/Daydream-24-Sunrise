@@ -21,7 +21,7 @@ Autonomous auton = Autonomous();
 void initialize() {
 	// Initialize subsystems
 	pros::lcd::initialize();
-	pros::lcd::print(0, "Reg: Initialize");
+	// pros::lcd::print(0, "Reg: Initialize");
 	imu.reset();
 	while (imu.is_calibrating()) {
 		pros::delay(20);
