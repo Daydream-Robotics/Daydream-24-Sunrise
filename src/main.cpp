@@ -73,7 +73,7 @@ void autonomous() {
 	
 
 	///////////////
-	matchload(false);
+	matchload(true);
 	///////////////
 
 
