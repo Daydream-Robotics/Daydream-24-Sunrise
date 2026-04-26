@@ -50,7 +50,7 @@ bool PurePursuit::step(double velocityDirection, double speedPercentage, double 
     }
 
     // update dynamic lookahead
-    m_lookAheadDist = getLookaheadDist();
+    m_lookAheadDist = getLookaheadDist(lookDistOverride);
 
     // get target point coords local to the robot
     Position targetPoint = m_als_path->returnLookaheadPoint({cur_x, cur_y}, m_lookAheadDist);
