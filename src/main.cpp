@@ -73,7 +73,7 @@ void autonomous() {
 	
 
 	///////////////
-	matchload(false);
+	matchload(true);
 	///////////////
 
 
@@ -141,7 +141,7 @@ void autonomous() {
     }
 
 	//////////
-	matchload(false);
+	matchload(true);
 
 
 	stepStartTime = std::chrono::high_resolution_clock::now();
@@ -158,25 +158,27 @@ void autonomous() {
 	centerScore.toggle();
 	
 	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE, 2);
+	move_intake(-HIGH_VOLTAGE, -HIGH_VOLTAGE, -HIGH_VOLTAGE, .150);
+	move_intake(HIGH_VOLTAGE, HIGH_VOLTAGE, HIGH_VOLTAGE);
 	//pros::delay(2000);
 	
 	descorer.toggle();
 	unloader.toggle();
 	centerScore.toggle();
 	
-	stepStartTime = std::chrono::high_resolution_clock::now();
-	purePursuit.setPath(als_paths[4]);
-    while (not purePursuit.step(1, 1)) {
-		auto currentTime = std::chrono::high_resolution_clock::now();
-    	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
-		if (elapsed > 2) {
-			break;
-		}
-        pros::delay(10);
-    }
+	// stepStartTime = std::chrono::high_resolution_clock::now();
+	// purePursuit.setPath(als_paths[4]);
+    // while (not purePursuit.step(1, 1)) {
+	// 	auto currentTime = std::chrono::high_resolution_clock::now();
+    // 	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
+	// 	if (elapsed > 2) {
+	// 		break;
+	// 	}
+    //     pros::delay(10);
+    // }
 
-	leftMotors.brake();
-	rightMotors.brake();
+	// leftMotors.brake();
+	// rightMotors.brake();
 
 	
 
