@@ -65,7 +65,7 @@ void autonomous() {
 	while (not purePursuit.step(1.0, 1, 16)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - stepStartTime).count();
-		if (2500) {
+		if (elapsed > 2500) {
 			break;
 		}
 		pros::delay(10);
@@ -117,14 +117,14 @@ void autonomous() {
 	while (not purePursuit.step(1, 0.8, 16)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - stepStartTime).count();
-		if (elapsed > 1300) {
+		if (elapsed > 1800) {
 			break;
 		}
 		pros::delay(10);
 	}
 
 	purePursuit.setPath(als_paths[WING]);
-	while (not purePursuit.step(-1, 0.8, 10)) {
+	while (not purePursuit.step(-1, 0.8, 12)) {
 		pros::delay(10);
 	}
 
