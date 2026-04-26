@@ -62,7 +62,7 @@ void autonomous() {
 	auto stepStartTime = std::chrono::high_resolution_clock::now(); 
 	unloader.set_value(true);
 	purePursuit.setPath(als_paths[0]);
-    while (not purePursuit.step(1, 1.3)) {
+    while (not purePursuit.step(1, 1)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 1.4) {
@@ -73,7 +73,7 @@ void autonomous() {
 	
 
 	///////////////
-	matchload(true);
+	matchload(false);
 	///////////////
 
 
@@ -87,7 +87,7 @@ void autonomous() {
 	*/
 	stepStartTime = std::chrono::high_resolution_clock::now(); 
 	purePursuit.setPath(als_paths[1]);
-    while (not purePursuit.step(-1, .7, 10)) {
+    while (not purePursuit.step(-1, .7, 10, 1.0)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 2) {
@@ -141,12 +141,12 @@ void autonomous() {
     }
 
 	//////////
-	matchload(true);
+	matchload(false);
 
 
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[3]);
-    while (not purePursuit.step(-1, 0.8, 8)) {
+    while (not purePursuit.step(-1, 0.8, 8, 1.2)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 4) {
@@ -166,7 +166,7 @@ void autonomous() {
 	
 	stepStartTime = std::chrono::high_resolution_clock::now();
 	purePursuit.setPath(als_paths[4]);
-    while (not purePursuit.step(1, 1.5)) {
+    while (not purePursuit.step(1, 1)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
     	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - stepStartTime).count();
 		if (elapsed > 2) {
@@ -178,7 +178,7 @@ void autonomous() {
 	leftMotors.brake();
 	rightMotors.brake();
 
-
+	
 
 
 	/* 

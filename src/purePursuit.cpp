@@ -22,7 +22,7 @@ void PurePursuit::setPath(ALS_Path& als_path) {
     m_ghostPoint = updateGhostPoint();
 }
 
-bool PurePursuit::step(double velocityDirection, double speedPercentage, double turnRateOverride) { // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
+bool PurePursuit::step(double velocityDirection, double speedPercentage, double turnRateOverride, double lookDistOverride) { // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
     // Safety check to prevent a data abort if the path is empty/invalid
     if (!m_als_path->isValid() || m_als_path->getSamples().empty()) {
         leftMotors.move_velocity(0);
@@ -145,10 +145,11 @@ Position PurePursuit::convertPtToRobotFrame(Position targetPoint) {
 
 
 // gets the dynamic lookahead distance based off of the forward velocity of the robot.
-double PurePursuit::getLookaheadDist() {
+double PurePursuit::getLookaheadDist(double lookaheadOverride) {
+    double lookahead_seconds = lookaheadOverride;
     double vel = std::abs(odom.getParallelVel());
     // pros::lcd::print(5, "Velocity: %lf in/s", vel); // Commented out to prevent LVGL crashes
-    double dynamicLookahead = std::clamp(LOOKAHEAD_SECONDS * vel, MIN_LOOKAHEAD_DIST, MAX_LOOKAHEAD_DIST);
+    double dynamicLookahead = std::clamp(lookahead_seconds * vel, MIN_LOOKAHEAD_DIST, MAX_LOOKAHEAD_DIST);
     // printf("Dynamic Lookahead: %lf\n", dynamicLookahead);
     return dynamicLookahead;
 }

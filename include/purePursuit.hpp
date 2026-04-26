@@ -38,7 +38,7 @@ class PurePursuit {
         Position convertPtToRobotFrame(Position targetPoint);
 
         // returns the dynamic lookahead distance adjusted for the robot speed
-        double getLookaheadDist();
+        double getLookaheadDist(double lookaheadOverride = LOOKAHEAD_SECONDS);
 
         // returns base velocity based off curvature to target point and distance to end of path
         int getBaseVelocity(double curvature, double speedPercentage = 1.0);
@@ -61,7 +61,7 @@ class PurePursuit {
 
         void setPath(ALS_Path& als_path);
 
-        bool step(double velocityDirection = 1.0, double speedPercentage = 1.0, double turnRateOverride = TURN_RATE); // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
+        bool step(double velocityDirection = 1.0, double speedPercentage = 1.0, double turnRateOverride = TURN_RATE, double lookDistOverride = LOOKAHEAD_SECONDS); // Direction = 1 for forward, -1 for reverse, SpeedPercentage from 0 to 1 for scaling velocity
 
         double m_totalDistOff = 0;
         double m_distFromEnd;
